@@ -39,7 +39,7 @@ namespace MediatR
 
         public TResponse Send<TResponse>(IRequest<TResponse> request)
         {
-            var defaultHandler = GetHandler(request);
+            var defaultHandler = GetRequestHandler(request);
 
             var result = defaultHandler.Handle(request);
 
@@ -48,7 +48,7 @@ namespace MediatR
 
         public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var defaultHandler = GetAsyncHandler(request);
+            var defaultHandler = GetAsyncRequestHandler(request);
 
             var result = defaultHandler.HandleAsync(request, cancellationToken);
 
@@ -83,33 +83,33 @@ namespace MediatR
             return Task.WhenAll(tasks);
         }
 
-        private RequestHandlerWrapper<TResponse> GetHandler<TResponse>(IRequest<TResponse> request)
+        private RequestHandlerWrapper<TResponse> GetRequestHandler<TResponse>(IRequest<TResponse> request)
         {
-            return GetHandler<RequestHandlerWrapper<TResponse>, TResponse>(request,
+            return GetRequestHandler<RequestHandlerWrapper<TResponse>, TResponse>(request,
                 typeof(IRequestHandler<,>),
                 typeof(RequestHandlerWrapper<,>));
         }
 
-        private AsyncRequestHandlerWrapper<TResponse> GetAsyncHandler<TResponse>(IRequest<TResponse> request)
+        private AsyncRequestHandlerWrapper<TResponse> GetAsyncRequestHandler<TResponse>(IRequest<TResponse> request)
         {
-            return GetHandler<AsyncRequestHandlerWrapper<TResponse>, TResponse>(request,
+            return GetRequestHandler<AsyncRequestHandlerWrapper<TResponse>, TResponse>(request,
                 typeof(IAsyncRequestHandler<,>),
                 typeof(AsyncRequestHandlerWrapper<,>));
         }
 
-        private TWrapper GetHandler<TWrapper, TResponse>(object request, Type handlerType, Type wrapperType)
+        private TWrapper GetRequestHandler<TWrapper, TResponse>(object request, Type handlerType, Type wrapperType)
         {
             var requestType = request.GetType();
 
             var genericHandlerType = HandlerTypeCache.GetOrAdd(requestType, handlerType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
             var genericWrapperType = WrapperTypeCache.GetOrAdd(requestType, wrapperType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
 
-            var handler = GetHandler(request, genericHandlerType);
+            var handler = GetRequestHandler(request, genericHandlerType);
 
             return (TWrapper) Activator.CreateInstance(genericWrapperType, handler);
         }
 
-        private object GetHandler(object request, Type handlerType)
+        private object GetRequestHandler(object request, Type handlerType)
         {
             try
             {
