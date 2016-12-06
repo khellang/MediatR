@@ -15,11 +15,16 @@ namespace MediatR
     public class Mediator : IMediator
     {
         private readonly SingleInstanceFactory _singleInstanceFactory;
-
         private readonly MultiInstanceFactory _multiInstanceFactory;
 
-        private readonly ConcurrentDictionary<Type, Type> _genericHandlerCache;
-        private readonly ConcurrentDictionary<Type, Type> _wrapperHandlerCache;
+        private static readonly ConcurrentDictionary<Type, Type> HandlerTypeCache;
+        private static readonly ConcurrentDictionary<Type, Type> WrapperTypeCache;
+
+        static Mediator()
+        {
+            HandlerTypeCache = new ConcurrentDictionary<Type, Type>();
+            WrapperTypeCache = new ConcurrentDictionary<Type, Type>();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Mediator"/> class.
@@ -30,8 +35,6 @@ namespace MediatR
         {
             _singleInstanceFactory = singleInstanceFactory;
             _multiInstanceFactory = multiInstanceFactory;
-            _genericHandlerCache = new ConcurrentDictionary<Type, Type>();
-            _wrapperHandlerCache = new ConcurrentDictionary<Type, Type>();
         }
 
         public TResponse Send<TResponse>(IRequest<TResponse> request)
@@ -98,8 +101,8 @@ namespace MediatR
         {
             var requestType = request.GetType();
 
-            var genericHandlerType = _genericHandlerCache.GetOrAdd(requestType, handlerType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
-            var genericWrapperType = _wrapperHandlerCache.GetOrAdd(requestType, wrapperType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
+            var genericHandlerType = HandlerTypeCache.GetOrAdd(requestType, handlerType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
+            var genericWrapperType = WrapperTypeCache.GetOrAdd(requestType, wrapperType, (type, root) => root.MakeGenericType(type, typeof(TResponse)));
 
             var handler = GetHandler(request, genericHandlerType);
 
