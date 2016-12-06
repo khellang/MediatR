@@ -23,6 +23,7 @@ namespace MediatR
         /// <param name="notification">Notification object</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task that represents the publish operation.</returns>
-        Task PublishAsync(INotification notification, CancellationToken cancellationToken = default(CancellationToken));
+        Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default(CancellationToken))
+            where TNotification : INotification;
     }
 }

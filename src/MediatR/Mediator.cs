@@ -52,23 +52,32 @@ namespace MediatR
             return result;
         }
 
-        public void Publish(INotification notification)
+        public void Publish<TNotification>(TNotification notification)
+            where TNotification : INotification
         {
-            var notificationHandlers = GetNotificationHandlers(notification);
+            var handlerType = typeof(INotificationHandler<TNotification>);
 
-            foreach (var handler in notificationHandlers)
+            var handlers = GetNotificationHandlers(notification, handlerType)
+                .Cast<INotificationHandler<TNotification>>()
+                .ToArray();
+
+            foreach (var handler in handlers)
             {
                 handler.Handle(notification);
             }
         }
 
-        public Task PublishAsync(INotification notification, CancellationToken cancellationToken = default(CancellationToken))
+        public Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default(CancellationToken))
+            where TNotification : INotification
         {
-            var notificationHandlers = GetAsyncNotificationHandlers(notification)
+            var handlerType = typeof(IAsyncNotificationHandler<TNotification>);
+
+            var tasks = GetNotificationHandlers(notification, handlerType)
+                .Cast<IAsyncNotificationHandler<TNotification>>()
                 .Select(handler => handler.Handle(notification, cancellationToken))
                 .ToArray();
 
-            return Task.WhenAll(notificationHandlers);
+            return Task.WhenAll(tasks);
         }
 
         private RequestHandlerWrapper<TResponse> GetHandler<TResponse>(IRequest<TResponse> request)
@@ -107,33 +116,6 @@ namespace MediatR
             {
                 throw BuildException(request, e);
             }
-        }
-
-        private IEnumerable<NotificationHandlerWrapper> GetNotificationHandlers(INotification notification)
-        {
-            return GetNotificationHandlers<NotificationHandlerWrapper>(notification,
-                typeof(INotificationHandler<>),
-                typeof(NotificationHandlerWrapper<>));
-        }
-
-        private IEnumerable<AsyncNotificationHandlerWrapper> GetAsyncNotificationHandlers(INotification notification)
-        {
-            return GetNotificationHandlers<AsyncNotificationHandlerWrapper>(notification,
-                typeof(IAsyncNotificationHandler<>),
-                typeof(AsyncNotificationHandlerWrapper<>));
-        }
-
-        private IEnumerable<TWrapper> GetNotificationHandlers<TWrapper>(object notification, Type handlerType, Type wrapperType)
-        {
-            var notificationType = notification.GetType();
-
-            var genericHandlerType = _genericHandlerCache.GetOrAdd(notificationType, handlerType, (type, root) => root.MakeGenericType(type));
-            var genericWrapperType = _wrapperHandlerCache.GetOrAdd(notificationType, wrapperType, (type, root) => root.MakeGenericType(type));
-
-            return GetNotificationHandlers(notification, genericHandlerType)
-                .Select(handler => Activator.CreateInstance(genericWrapperType, handler))
-                .Cast<TWrapper>()
-                .ToList();
         }
 
         private IEnumerable<object> GetNotificationHandlers(object notification, Type handlerType)

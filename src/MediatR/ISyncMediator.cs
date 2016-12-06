@@ -17,6 +17,7 @@ namespace MediatR
         /// Send a notification to multiple handlers
         /// </summary>
         /// <param name="notification">Notification object</param>
-        void Publish(INotification notification);
+        void Publish<TNotification>(TNotification notification)
+            where TNotification : INotification;
     }
 }
