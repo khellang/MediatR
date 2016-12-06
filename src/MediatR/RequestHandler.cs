@@ -7,9 +7,9 @@
     public abstract class RequestHandler<TMessage> : IRequestHandler<TMessage, Unit>
         where TMessage : IRequest
     {
-        public Unit Handle(TMessage message)
+        Unit IRequestHandler<TMessage, Unit>.Handle(TMessage message)
         {
-            HandleCore(message);
+            Handle(message);
 
             return Unit.Value;
         }
@@ -18,6 +18,6 @@
         /// Handles a void request
         /// </summary>
         /// <param name="message">The request message</param>
-        protected abstract void HandleCore(TMessage message);
+        protected abstract void Handle(TMessage message);
     }
 }

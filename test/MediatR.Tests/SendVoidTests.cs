@@ -22,7 +22,7 @@
                 _writer = writer;
             }
 
-            protected override void HandleCore(Ping message)
+            protected override void Handle(Ping message)
             {
                 _writer.Write(message.Message + " Pong");
             }
