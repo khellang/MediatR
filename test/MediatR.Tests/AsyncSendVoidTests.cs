@@ -25,9 +25,9 @@ namespace MediatR.Tests
                 _writer = writer;
             }
 
-            protected override Task HandleAsync(Ping message, CancellationToken cancellationToken)
+            protected override Task HandleAsync(Ping request, CancellationToken cancellationToken)
             {
-                return _writer.WriteAsync(message.Message + " Pong");
+                return _writer.WriteAsync(request.Message + " Pong");
             }
         }
 

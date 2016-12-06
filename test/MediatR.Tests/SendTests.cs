@@ -18,9 +18,9 @@
 
         public class PingHandler : IRequestHandler<Ping, Pong>
         {
-            public Pong Handle(Ping message)
+            public Pong Handle(Ping request)
             {
-                return new Pong { Message = message.Message + " Pong" };
+                return new Pong { Message = request.Message + " Pong" };
             }
         }
 

@@ -3,24 +3,24 @@ using System.Threading.Tasks;
 
 namespace MediatR.Internal
 {
-    internal abstract class AsyncRequestHandlerWrapper<TResult>
+    internal abstract class AsyncRequestHandlerWrapper<TResponse>
     {
-        public abstract Task<TResult> HandleAsync(IRequest<TResult> message, CancellationToken cancellationToken);
+        public abstract Task<TResponse> HandleAsync(IRequest<TResponse> request, CancellationToken cancellationToken);
     }
 
-    internal class AsyncRequestHandlerWrapper<TCommand, TResult> : AsyncRequestHandlerWrapper<TResult>
-        where TCommand : IRequest<TResult>
+    internal class AsyncRequestHandlerWrapper<TRequest, TResponse> : AsyncRequestHandlerWrapper<TResponse>
+        where TRequest : IRequest<TResponse>
     {
-        private readonly IAsyncRequestHandler<TCommand, TResult> _inner;
+        private readonly IAsyncRequestHandler<TRequest, TResponse> _inner;
 
-        public AsyncRequestHandlerWrapper(IAsyncRequestHandler<TCommand, TResult> inner)
+        public AsyncRequestHandlerWrapper(IAsyncRequestHandler<TRequest, TResponse> inner)
         {
             _inner = inner;
         }
 
-        public override Task<TResult> HandleAsync(IRequest<TResult> message, CancellationToken cancellationToken)
+        public override Task<TResponse> HandleAsync(IRequest<TResponse> request, CancellationToken cancellationToken)
         {
-            return _inner.Handle((TCommand)message, cancellationToken);
+            return _inner.HandleAsync((TRequest)request, cancellationToken);
         }
     }
 }

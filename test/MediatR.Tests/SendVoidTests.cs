@@ -22,9 +22,9 @@
                 _writer = writer;
             }
 
-            protected override void Handle(Ping message)
+            protected override void Handle(Ping request)
             {
-                _writer.Write(message.Message + " Pong");
+                _writer.Write(request.Message + " Pong");
             }
         }
 
