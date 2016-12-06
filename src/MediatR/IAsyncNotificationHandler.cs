@@ -16,6 +16,6 @@ namespace MediatR
         /// <param name="notification">The notification message</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task representing handling the notification</returns>
-        Task Handle(TNotification notification, CancellationToken cancellationToken);
+        Task HandleAsync(TNotification notification, CancellationToken cancellationToken);
     }
 }

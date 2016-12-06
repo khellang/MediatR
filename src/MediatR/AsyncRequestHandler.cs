@@ -10,9 +10,9 @@ namespace MediatR
     public abstract class AsyncRequestHandler<TMessage> : IAsyncRequestHandler<TMessage, Unit>
         where TMessage : IRequest
     {
-        async Task<Unit> IAsyncRequestHandler<TMessage, Unit>.Handle(TMessage message, CancellationToken cancellationToken)
+        async Task<Unit> IAsyncRequestHandler<TMessage, Unit>.HandleAsync(TMessage message, CancellationToken cancellationToken)
         {
-            await Handle(message, cancellationToken).ConfigureAwait(false);
+            await HandleAsync(message, cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
         }
@@ -23,6 +23,6 @@ namespace MediatR
         /// <param name="message">The request message</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task representing the void response from the request</returns>
-        protected abstract Task Handle(TMessage message, CancellationToken cancellationToken);
+        protected abstract Task HandleAsync(TMessage message, CancellationToken cancellationToken);
     }
 }

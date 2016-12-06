@@ -6,7 +6,7 @@ namespace MediatR.Examples
 
     public class PingAsyncHandler : IAsyncRequestHandler<PingAsync, Pong>
     {
-        public Task<Pong> Handle(PingAsync message, CancellationToken cancellationToken)
+        public Task<Pong> HandleAsync(PingAsync message, CancellationToken cancellationToken)
         {
             return Task.FromResult(new Pong { Message = message.Message + " Pong" });
         }

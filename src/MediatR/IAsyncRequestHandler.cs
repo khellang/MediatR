@@ -17,6 +17,6 @@ namespace MediatR
         /// <param name="message">The request message</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task representing the response from the request</returns>
-        Task<TResponse> Handle(TRequest message, CancellationToken cancellationToken);
+        Task<TResponse> HandleAsync(TRequest message, CancellationToken cancellationToken);
     }
 }

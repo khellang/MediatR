@@ -50,7 +50,7 @@ namespace MediatR
         {
             var defaultHandler = GetAsyncHandler(request);
 
-            var result = defaultHandler.Handle(request, cancellationToken);
+            var result = defaultHandler.HandleAsync(request, cancellationToken);
 
             return result;
         }
@@ -77,7 +77,7 @@ namespace MediatR
 
             var tasks = GetNotificationHandlers(notification, handlerType)
                 .Cast<IAsyncNotificationHandler<TNotification>>()
-                .Select(handler => handler.Handle(notification, cancellationToken))
+                .Select(handler => handler.HandleAsync(notification, cancellationToken))
                 .ToArray();
 
             return Task.WhenAll(tasks);
