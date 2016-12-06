@@ -1,4 +1,6 @@
-﻿namespace MediatR.Tests
+﻿using System.Threading;
+
+namespace MediatR.Tests
 {
     using System;
     using System.IO;
@@ -25,7 +27,7 @@
                 _writer = writer;
             }
 
-            public Task Handle(Ping message)
+            public Task Handle(Ping message, CancellationToken cancellationToken)
             {
                 return _writer.WriteLineAsync(message.Message + " Pong");
             }
@@ -40,7 +42,7 @@
                 _writer = writer;
             }
 
-            public Task Handle(Ping message)
+            public Task Handle(Ping message, CancellationToken cancellationToken)
             {
                 return _writer.WriteLineAsync(message.Message + " Pung");
             }
@@ -51,7 +53,7 @@
         {
             var builder = new StringBuilder();
             var writer = new StringWriter(builder);
-            
+
             var container = new Container(cfg =>
             {
                 cfg.Scan(scanner =>

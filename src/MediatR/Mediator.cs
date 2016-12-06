@@ -1,4 +1,5 @@
-﻿using MediatR.Internal;
+﻿using System.Threading;
+using MediatR.Internal;
 
 namespace MediatR
 {
@@ -42,11 +43,11 @@ namespace MediatR
             return result;
         }
 
-        public Task<TResponse> SendAsync<TResponse>(IAsyncRequest<TResponse> request)
+        public Task<TResponse> SendAsync<TResponse>(IAsyncRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
         {
             var defaultHandler = GetHandler(request);
 
-            var result = defaultHandler.Handle(request);
+            var result = defaultHandler.Handle(request, cancellationToken);
 
             return result;
         }
@@ -61,10 +62,10 @@ namespace MediatR
             }
         }
 
-        public Task PublishAsync(IAsyncNotification notification)
+        public Task PublishAsync(IAsyncNotification notification, CancellationToken cancellationToken = default(CancellationToken))
         {
             var notificationHandlers = GetNotificationHandlers(notification)
-                .Select(handler => handler.Handle(notification))
+                .Select(handler => handler.Handle(notification, cancellationToken))
                 .ToArray();
 
             return Task.WhenAll(notificationHandlers);
