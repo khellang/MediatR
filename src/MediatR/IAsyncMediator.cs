@@ -15,7 +15,7 @@ namespace MediatR
         /// <param name="request">Request object</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task that represents the send operation. The task result contains the handler response</returns>
-        Task<TResponse> SendAsync<TResponse>(IAsyncRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken));
+        Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Asynchronously send a notification to multiple handlers
@@ -23,6 +23,6 @@ namespace MediatR
         /// <param name="notification">Notification object</param>
         /// <param name="cancellationToken">A cancellation token</param>
         /// <returns>A task that represents the publish operation.</returns>
-        Task PublishAsync(IAsyncNotification notification, CancellationToken cancellationToken = default(CancellationToken));
+        Task PublishAsync(INotification notification, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

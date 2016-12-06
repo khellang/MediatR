@@ -11,7 +11,7 @@ namespace MediatR.Tests
 
     public class AsyncSendVoidTests
     {
-        public class Ping : IAsyncRequest
+        public class Ping : IRequest
         {
             public string Message { get; set; }
         }

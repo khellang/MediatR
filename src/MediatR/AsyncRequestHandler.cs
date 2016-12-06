@@ -8,7 +8,7 @@ namespace MediatR
     /// </summary>
     /// <typeparam name="TMessage">The type of void request being handled</typeparam>
     public abstract class AsyncRequestHandler<TMessage> : IAsyncRequestHandler<TMessage, Unit>
-        where TMessage : IAsyncRequest
+        where TMessage : IRequest
     {
         public async Task<Unit> Handle(TMessage message, CancellationToken cancellationToken)
         {

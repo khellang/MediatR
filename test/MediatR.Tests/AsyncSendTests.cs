@@ -10,7 +10,7 @@ namespace MediatR.Tests
     public class AsyncSendTests
     {
 
-        public class Ping : IAsyncRequest<Pong>
+        public class Ping : IRequest<Pong>
         {
             public string Message { get; set; }
         }

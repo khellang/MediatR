@@ -43,9 +43,9 @@ namespace MediatR
             return result;
         }
 
-        public Task<TResponse> SendAsync<TResponse>(IAsyncRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
+        public Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var defaultHandler = GetHandler(request);
+            var defaultHandler = GetAsyncHandler(request);
 
             var result = defaultHandler.Handle(request, cancellationToken);
 
@@ -62,9 +62,9 @@ namespace MediatR
             }
         }
 
-        public Task PublishAsync(IAsyncNotification notification, CancellationToken cancellationToken = default(CancellationToken))
+        public Task PublishAsync(INotification notification, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var notificationHandlers = GetNotificationHandlers(notification)
+            var notificationHandlers = GetAsyncNotificationHandlers(notification)
                 .Select(handler => handler.Handle(notification, cancellationToken))
                 .ToArray();
 
@@ -78,7 +78,7 @@ namespace MediatR
                 typeof(RequestHandlerWrapper<,>));
         }
 
-        private AsyncRequestHandlerWrapper<TResponse> GetHandler<TResponse>(IAsyncRequest<TResponse> request)
+        private AsyncRequestHandlerWrapper<TResponse> GetAsyncHandler<TResponse>(IRequest<TResponse> request)
         {
             return GetHandler<AsyncRequestHandlerWrapper<TResponse>, TResponse>(request,
                 typeof(IAsyncRequestHandler<,>),
@@ -116,7 +116,7 @@ namespace MediatR
                 typeof(NotificationHandlerWrapper<>));
         }
 
-        private IEnumerable<AsyncNotificationHandlerWrapper> GetNotificationHandlers(IAsyncNotification notification)
+        private IEnumerable<AsyncNotificationHandlerWrapper> GetAsyncNotificationHandlers(INotification notification)
         {
             return GetNotificationHandlers<AsyncNotificationHandlerWrapper>(notification,
                 typeof(IAsyncNotificationHandler<>),

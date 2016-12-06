@@ -13,9 +13,6 @@
         public class Pong {}
         public class VoidPing : IRequest { }
         public class Pinged : INotification { }
-        public class AsyncPing : IAsyncRequest<Pong> { }
-        public class AsyncVoidPing : IAsyncRequest { }
-        public class AsyncPinged : IAsyncNotification { }
 
         public ExceptionTests()
         {
@@ -49,19 +46,19 @@
         [Fact]
         public void Should_throw_for_async_send()
         {
-            Should.Throw<InvalidOperationException>(() => _mediator.SendAsync(new AsyncPing()));
+            Should.Throw<InvalidOperationException>(() => _mediator.SendAsync(new Ping()));
         }
 
         [Fact]
         public void Should_throw_for_async_void_send()
         {
-            Should.Throw<InvalidOperationException>(() => _mediator.SendAsync(new AsyncVoidPing()));
+            Should.Throw<InvalidOperationException>(() => _mediator.SendAsync(new VoidPing()));
         }
 
         [Fact]
         public void Should_not_throw_for_async_publish()
         {
-            Should.NotThrow(() => _mediator.PublishAsync(new AsyncPinged()));
+            Should.NotThrow(() => _mediator.PublishAsync(new Pinged()));
         }
     }
 }
