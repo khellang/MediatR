@@ -14,9 +14,9 @@ namespace MediatR.Examples
             _writer = writer;
         }
 
-        public async Task Handle(PingedAsync notification, CancellationToken cancellationToken)
+        public Task Handle(PingedAsync notification, CancellationToken cancellationToken)
         {
-            await _writer.WriteLineAsync("Got pinged async.");
+            return _writer.WriteLineAsync("Got pinged async.");
         }
     }
 
@@ -29,9 +29,9 @@ namespace MediatR.Examples
             _writer = writer;
         }
 
-        public async Task Handle(PingedAsync notification, CancellationToken cancellationToken)
+        public Task Handle(PingedAsync notification, CancellationToken cancellationToken)
         {
-            await _writer.WriteLineAsync("Got pinged also async.");
+            return _writer.WriteLineAsync("Got pinged also async.");
         }
     }
 }

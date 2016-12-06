@@ -9,7 +9,7 @@
         {
             writer.WriteLine("Sample mediator implementation using send, publish and post-request handlers in sync and async version.");
             writer.WriteLine("---------------");
-            
+
             writer.WriteLine("Sending Ping...");
             var pong = mediator.Send(new Ping { Message = "Ping" });
             writer.WriteLine("Received: " + pong.Message);

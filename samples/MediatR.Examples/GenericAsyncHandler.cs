@@ -13,9 +13,9 @@ namespace MediatR.Examples
             _writer = writer;
         }
 
-        public async Task Handle(IAsyncNotification notification, CancellationToken cancellationToken)
+        public Task Handle(IAsyncNotification notification, CancellationToken cancellationToken)
         {
-            await _writer.WriteLineAsync("Got notified also async.");
+            return _writer.WriteLineAsync("Got notified also async.");
         }
     }
 }
