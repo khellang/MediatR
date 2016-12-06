@@ -5,7 +5,6 @@ namespace MediatR.Tests
     using System.Threading.Tasks;
     using Shouldly;
     using StructureMap;
-    using StructureMap.Graph;
     using Xunit;
 
     public class AsyncSendTests

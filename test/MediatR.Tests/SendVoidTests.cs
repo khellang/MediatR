@@ -4,7 +4,6 @@
     using System.Text;
     using Shouldly;
     using StructureMap;
-    using StructureMap.Graph;
     using Xunit;
 
     public class SendVoidTests

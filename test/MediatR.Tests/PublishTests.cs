@@ -5,7 +5,6 @@
     using System.Text;
     using Shouldly;
     using StructureMap;
-    using StructureMap.Graph;
     using Xunit;
 
     public class PublishTests
@@ -50,7 +49,7 @@
         {
             var builder = new StringBuilder();
             var writer = new StringWriter(builder);
-            
+
             var container = new Container(cfg =>
             {
                 cfg.Scan(scanner =>
